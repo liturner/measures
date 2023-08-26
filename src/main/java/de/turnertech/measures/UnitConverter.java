@@ -1,4 +1,4 @@
-package de.turnertech.ucum;
+package de.turnertech.measures;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -26,9 +26,7 @@ public class UnitConverter {
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.NAUTICAL_MILE, Unit.METRE), 1852.0);
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.NAUTICAL_MILE, Unit.KILOMETRE), 1.852);
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.METRE), 1000.0);
-        scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.CENTIMETRE), 100000.0);       
-
-        functionMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KELVIN, Unit.DEGREES_CELSIUS), (double kelvin) -> kelvin - 273.15);
+        scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.CENTIMETRE), 100000.0);
     }
 
     public static Double putScalar(final Object unitIn, final Object unitOut, final double scalar) {
@@ -45,7 +43,7 @@ public class UnitConverter {
     public static Measure convert(final Measure in, final Unit unitOut) {
         Objects.requireNonNull(in);
 
-        return convert(in.getValue(), in.getUnit(), unitOut);
+        return convert(in.getQuantity(), in.getUnit(), unitOut);
     }
 
     public static Measure convert(final double in, final Unit unitIn, final Unit unitOut) {

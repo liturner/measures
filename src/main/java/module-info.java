@@ -2,6 +2,6 @@ module de.turnertech.ucum {
     
     requires java.base;
 
-    exports de.turnertech.ucum;
+    exports de.turnertech.measures;
 
 }
