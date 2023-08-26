@@ -5,6 +5,17 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
 
+/**
+ * The UnitConverter handles specialist conversions with more accuracy than would be possible
+ * via conversions to base units. For example if converting from a unit like Kilometer to Nautical 
+ * Mile, it is possble that converting first to meters would cause overrun errors or lose accuracy
+ * due to binary limitations.
+ * 
+ * 1. Functions
+ * 2. Scalars
+ * 3. Divisors (Scalar)
+ * 4. Unit Base Unit
+ */
 public class UnitConverter {
     
     private static final HashMap<AbstractMap.SimpleImmutableEntry<Object, Object>, Double> scalarMap = new HashMap<>();
@@ -29,6 +40,12 @@ public class UnitConverter {
 
     public static DoubleUnaryOperator putFunction(final Object unitIn, final Object unitOut, final DoubleUnaryOperator function) {
         return functionMap.put(new AbstractMap.SimpleImmutableEntry<>(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), Objects.requireNonNull(function));
+    }
+
+    public static Measure convert(final Measure in, final Unit unitOut) {
+        Objects.requireNonNull(in);
+
+        return convert(in.getValue(), in.getUnit(), unitOut);
     }
 
     public static Measure convert(final double in, final Unit unitIn, final Unit unitOut) {
@@ -56,6 +73,12 @@ public class UnitConverter {
         variable = scalarMap.getOrDefault(new AbstractMap.SimpleImmutableEntry<>(unitOut, unitIn), null);
         if(variable != null) {
             return new Measure(in / variable, unitOut);
+        }
+
+        // Convert to shared base unit
+        if(unitIn.getBaseUnit() == unitOut.getBaseUnit()) {
+            final double inInBaseUnit = unitIn.convertToBaseUnit(in);
+            return new Measure(unitOut.convertFromBaseUnit(inInBaseUnit), unitOut);
         }
 
         throw new UnsupportedOperationException("Conversion from " + unitIn.toString() + " to " + unitOut.toString() + " is not supported.");

@@ -19,4 +19,14 @@ public class Measure {
         return difference <= tolerance;
     }
 
+    public double getValue() {
+        return value;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    
+
 }
