@@ -27,6 +27,9 @@ public class UnitConverter {
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.NAUTICAL_MILE, Unit.KILOMETRE), 1.852);
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.METRE), 1000.0);
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.CENTIMETRE), 100000.0);
+        
+        // Placeholder. This is a bad example of using functions to optimise. REplace in the future with something like KNOT -> METRE_PER_SECOND (knots) - > (knots / 3.6) * 1.852
+        functionMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.NAUTICAL_MILE, Unit.KILOMETRE), (nmi_i) -> nmi_i * 1.852);
     }
 
     /**

@@ -14,6 +14,9 @@ public class Unit {
     /** °C */
     public static final Unit DEGREES_CELSIUS = new Unit(KELVIN, (celsius) -> celsius + 273.15, (kelvin) -> kelvin - 273.15);
     
+    /** °F */
+    public static final Unit DEGREES_FAHRENHEIT = new Unit(KELVIN, (fahrenheit) -> (fahrenheit - 32) * 5.0/9.0 + 273.15, (kelvin) -> (kelvin - 273.15) * 9/5 + 32);
+    
     /** m */
     public static final Unit METRE = new Unit(null, (metre) -> metre, (kelvin) -> kelvin);
     
@@ -22,6 +25,15 @@ public class Unit {
     
     /** in_i */
     public static final Unit INCH = new Unit(METRE, (inch) -> inch * 0.0254, (metre) -> metre / 0.0254);
+    
+    /** ft_i */
+    public static final Unit FOOT = new Unit(METRE, (foot) -> foot * 0.3048, (metre) -> metre / 0.3048);
+    
+    /** yd_i */
+    public static final Unit YARD = new Unit(METRE, (yard) -> yard * 0.9144, (metre) -> metre / 0.9144);
+    
+    /** mi_i */
+    public static final Unit MILE = new Unit(METRE, (mile) -> mile * 1609.344, (metre) -> metre / 1609.344);
     
     /** km */
     public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -> kilometer * 1000.0, (metre) -> metre * 0.001);
@@ -35,11 +47,14 @@ public class Unit {
     /** g */
     public static final Unit GRAM = new Unit(null, (gram) -> gram, (gram) -> gram);
     
+    /** lb_av */
+    public static final Unit POUND = new Unit(Unit.GRAM, (gram) -> gram * 453.59237, (pound) -> pound / 453.59237);
+    
     /** rad */
     public static final Unit RADIAN = new Unit(null, (rad) -> rad, (rad) -> rad);
     
     /** deg */
-    public static final Unit DEGREE = new Unit(null, (deg) -> deg * Math.PI / 180.0, (rad) -> rad * 180 / Math.PI);
+    public static final Unit DEGREE = new Unit(Unit.RADIAN, (deg) -> deg * Math.PI / 180.0, (rad) -> rad * 180 / Math.PI);
 
     private final Unit baseUnit;
 
