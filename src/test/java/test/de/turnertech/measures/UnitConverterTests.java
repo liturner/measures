@@ -1,5 +1,8 @@
-package de.turnertech.measures;
+package test.de.turnertech.measures;
 
+import de.turnertech.measures.Measure;
+import de.turnertech.measures.Unit;
+import de.turnertech.measures.UnitConverter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
