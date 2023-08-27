@@ -20,6 +20,9 @@ public class Unit {
     /** cm */
     public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -> centimetre * 0.01, (metre) -> metre * 100.0);
     
+    /** in_i */
+    public static final Unit INCH = new Unit(METRE, (inch) -> inch * 0.0254, (metre) -> metre / 0.0254);
+    
     /** km */
     public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -> kilometer * 1000.0, (metre) -> metre * 0.001);
     
@@ -34,6 +37,9 @@ public class Unit {
     
     /** rad */
     public static final Unit RADIAN = new Unit(null, (rad) -> rad, (rad) -> rad);
+    
+    /** deg */
+    public static final Unit DEGREE = new Unit(null, (deg) -> deg * Math.PI / 180.0, (rad) -> rad * 180 / Math.PI);
 
     private final Unit baseUnit;
 
