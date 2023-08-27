@@ -9,6 +9,11 @@ uf Unit.
 The compiled Jar files are available on Maven Central with the coordinates 
 "de.turnertech:measures".
 
+# Docs
+
+- [Maven Site](https://liturner.github.io/measures/)
+- [Javadoc](https://liturner.github.io/measures/apidocs/de.turnertech.measures/de/turnertech/measures/package-summary.html)
+
 # Contributing
 
 Open a Pull Request. I cannot promise I will answer quickly, but Pull Requests
