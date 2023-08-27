@@ -4,6 +4,7 @@ import de.turnertech.measures.Measure;
 import de.turnertech.measures.Unit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -67,6 +68,13 @@ public class UnitTests {
         assertEquals(1000.0, myMeasure.getQuantity());
         myMeasure.setQuantity(1.0);
         assertEquals(1.0, myMeasure.getQuantity());
+    }
+    
+    @Test
+    void failTests() {
+        Measure myMeasure = Unit.METRE.createMeasure(1000);
+        assertThrows(UnsupportedOperationException.class, () -> myMeasure.convertTo(Unit.KELVIN));
+        assertThrows(ArithmeticException.class, () -> Unit.KILOMETRE.convertToBaseUnit(Double.MAX_VALUE));
     }
 
 }

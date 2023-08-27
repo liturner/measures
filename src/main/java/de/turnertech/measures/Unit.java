@@ -25,6 +25,15 @@ public class Unit {
     
     /** nmi_i */
     public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -> nmi_i * 1852.0, (metre) -> metre / 1852.0);
+    
+    /** s */
+    public static final Unit SECOND = new Unit(null, (second) -> second, (second) -> second);
+    
+    /** g */
+    public static final Unit GRAM = new Unit(null, (gram) -> gram, (gram) -> gram);
+    
+    /** rad */
+    public static final Unit RADIAN = new Unit(null, (rad) -> rad, (rad) -> rad);
 
     private final Unit baseUnit;
 
@@ -68,7 +77,11 @@ public class Unit {
      * @return the quantity of the Base Unit which the supplied quantity represents.
      */
     public Measure convertToBaseUnit(final double quantity) {
-        return new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);
+        final Measure resultingValue = new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);
+        if(quantity != Double.POSITIVE_INFINITY && quantity != Double.POSITIVE_INFINITY && (resultingValue.getQuantity() == Double.NEGATIVE_INFINITY || resultingValue.getQuantity() == Double.POSITIVE_INFINITY)) {
+            throw new ArithmeticException("Conversion caused overflow.");
+        }
+        return resultingValue;
     }
 
     /**
@@ -79,7 +92,11 @@ public class Unit {
      * @return a measure with this Unit.
      */
     public Measure convertFromBaseUnit(final double quantity) {
-        return new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);
+        final Measure resultingValue = new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);
+        if(quantity != Double.POSITIVE_INFINITY && quantity != Double.POSITIVE_INFINITY && (resultingValue.getQuantity() == Double.NEGATIVE_INFINITY || resultingValue.getQuantity() == Double.POSITIVE_INFINITY)) {
+            throw new ArithmeticException("Conversion caused overflow.");
+        }
+        return resultingValue;
     }
 
 }

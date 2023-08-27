@@ -90,6 +90,7 @@ public class UnitConverter {
      * @param unitOut the desired Unit which should be present in the returned
      * measure
      * @return a measure containing the in parameter represented in the unitOut.
+     * @throws UnsupportedOperationException if conversion is not supported
      */
     public static Measure convert(final double in, final Unit unitIn, final Unit unitOut) {
         Objects.requireNonNull(unitIn);
