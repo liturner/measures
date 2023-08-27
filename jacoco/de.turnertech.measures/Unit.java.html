@@ -14,17 +14,47 @@ public class Unit {
     /** °C */
 <span class="fc" id="L15">    public static final Unit DEGREES_CELSIUS = new Unit(KELVIN, (celsius) -&gt; celsius + 273.15, (kelvin) -&gt; kelvin - 273.15);</span>
     
+    /** °F */
+<span class="pc" id="L18">    public static final Unit DEGREES_FAHRENHEIT = new Unit(KELVIN, (fahrenheit) -&gt; (fahrenheit - 32) * 5.0/9.0 + 273.15, (kelvin) -&gt; (kelvin - 273.15) * 9/5 + 32);</span>
+    
     /** m */
-<span class="fc" id="L18">    public static final Unit METRE = new Unit(null, (metre) -&gt; metre, (kelvin) -&gt; kelvin);</span>
+<span class="fc" id="L21">    public static final Unit METRE = new Unit(null, (metre) -&gt; metre, (kelvin) -&gt; kelvin);</span>
     
     /** cm */
-<span class="fc" id="L21">    public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -&gt; centimetre * 0.01, (metre) -&gt; metre * 100.0);</span>
+<span class="fc" id="L24">    public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -&gt; centimetre * 0.01, (metre) -&gt; metre * 100.0);</span>
+    
+    /** in_i */
+<span class="pc" id="L27">    public static final Unit INCH = new Unit(METRE, (inch) -&gt; inch * 0.0254, (metre) -&gt; metre / 0.0254);</span>
+    
+    /** ft_i */
+<span class="pc" id="L30">    public static final Unit FOOT = new Unit(METRE, (foot) -&gt; foot * 0.3048, (metre) -&gt; metre / 0.3048);</span>
+    
+    /** yd_i */
+<span class="pc" id="L33">    public static final Unit YARD = new Unit(METRE, (yard) -&gt; yard * 0.9144, (metre) -&gt; metre / 0.9144);</span>
+    
+    /** mi_i */
+<span class="pc" id="L36">    public static final Unit MILE = new Unit(METRE, (mile) -&gt; mile * 1609.344, (metre) -&gt; metre / 1609.344);</span>
     
     /** km */
-<span class="fc" id="L24">    public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -&gt; kilometer * 1000.0, (metre) -&gt; metre * 0.001);</span>
+<span class="fc" id="L39">    public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -&gt; kilometer * 1000.0, (metre) -&gt; metre * 0.001);</span>
     
     /** nmi_i */
-<span class="fc" id="L27">    public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -&gt; nmi_i * 1852.0, (metre) -&gt; metre / 1852.0);</span>
+<span class="fc" id="L42">    public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -&gt; nmi_i * 1852.0, (metre) -&gt; metre / 1852.0);</span>
+    
+    /** s */
+<span class="pc" id="L45">    public static final Unit SECOND = new Unit(null, (second) -&gt; second, (second) -&gt; second);</span>
+    
+    /** g */
+<span class="pc" id="L48">    public static final Unit GRAM = new Unit(null, (gram) -&gt; gram, (gram) -&gt; gram);</span>
+    
+    /** lb_av */
+<span class="pc" id="L51">    public static final Unit POUND = new Unit(Unit.GRAM, (gram) -&gt; gram * 453.59237, (pound) -&gt; pound / 453.59237);</span>
+    
+    /** rad */
+<span class="pc" id="L54">    public static final Unit RADIAN = new Unit(null, (rad) -&gt; rad, (rad) -&gt; rad);</span>
+    
+    /** deg */
+<span class="pc" id="L57">    public static final Unit DEGREE = new Unit(Unit.RADIAN, (deg) -&gt; deg * Math.PI / 180.0, (rad) -&gt; rad * 180 / Math.PI);</span>
 
     private final Unit baseUnit;
 
@@ -32,11 +62,21 @@ public class Unit {
 
     private final DoubleUnaryOperator fromBaseUnitFunction;
 
-<span class="fc" id="L35">    private Unit(final Unit baseUnit, final DoubleUnaryOperator toBaseUnitFunction, final DoubleUnaryOperator fromBaseUnitFunction) {</span>
-<span class="fc" id="L36">        this.baseUnit = Objects.requireNonNullElse(baseUnit, this);</span>
-<span class="fc" id="L37">        this.toBaseUnitFunction = Objects.requireNonNull(toBaseUnitFunction);</span>
-<span class="fc" id="L38">        this.fromBaseUnitFunction = Objects.requireNonNull(fromBaseUnitFunction);</span>
-<span class="fc" id="L39">    }</span>
+<span class="fc" id="L65">    private Unit(final Unit baseUnit, final DoubleUnaryOperator toBaseUnitFunction, final DoubleUnaryOperator fromBaseUnitFunction) {</span>
+<span class="fc" id="L66">        this.baseUnit = Objects.requireNonNullElse(baseUnit, this);</span>
+<span class="fc" id="L67">        this.toBaseUnitFunction = Objects.requireNonNull(toBaseUnitFunction);</span>
+<span class="fc" id="L68">        this.fromBaseUnitFunction = Objects.requireNonNull(fromBaseUnitFunction);</span>
+<span class="fc" id="L69">    }</span>
+    
+    /**
+     * Helper function for creating measures with a Unit.
+     * 
+     * @param quantity the quantity of this unit which should be in the Measure.
+     * @return a new Measure instance.
+     */
+    public Measure createMeasure(final double quantity) {
+<span class="fc" id="L78">        return new Measure(quantity, this);</span>
+    }
 
     /**
      * Gets the common base unit for the family of units to which this Unit belongs. For example,
@@ -46,7 +86,7 @@ public class Unit {
      * @return the base unit for this Unit.
      */
     public Unit getBaseUnit() {
-<span class="fc" id="L49">        return baseUnit;</span>
+<span class="fc" id="L89">        return baseUnit;</span>
     }
 
     /**
@@ -58,7 +98,11 @@ public class Unit {
      * @return the quantity of the Base Unit which the supplied quantity represents.
      */
     public Measure convertToBaseUnit(final double quantity) {
-<span class="fc" id="L61">        return new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);</span>
+<span class="fc" id="L101">        final Measure resultingValue = new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);</span>
+<span class="pc bpc" id="L102" title="3 of 8 branches missed.">        if(quantity != Double.POSITIVE_INFINITY &amp;&amp; quantity != Double.POSITIVE_INFINITY &amp;&amp; (resultingValue.getQuantity() == Double.NEGATIVE_INFINITY || resultingValue.getQuantity() == Double.POSITIVE_INFINITY)) {</span>
+<span class="fc" id="L103">            throw new ArithmeticException(&quot;Conversion caused overflow.&quot;);</span>
+        }
+<span class="fc" id="L105">        return resultingValue;</span>
     }
 
     /**
@@ -69,7 +113,11 @@ public class Unit {
      * @return a measure with this Unit.
      */
     public Measure convertFromBaseUnit(final double quantity) {
-<span class="fc" id="L72">        return new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);</span>
+<span class="fc" id="L116">        final Measure resultingValue = new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);</span>
+<span class="pc bpc" id="L117" title="4 of 8 branches missed.">        if(quantity != Double.POSITIVE_INFINITY &amp;&amp; quantity != Double.POSITIVE_INFINITY &amp;&amp; (resultingValue.getQuantity() == Double.NEGATIVE_INFINITY || resultingValue.getQuantity() == Double.POSITIVE_INFINITY)) {</span>
+<span class="nc" id="L118">            throw new ArithmeticException(&quot;Conversion caused overflow.&quot;);</span>
+        }
+<span class="fc" id="L120">        return resultingValue;</span>
     }
 
 }

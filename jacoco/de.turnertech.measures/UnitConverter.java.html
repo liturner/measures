@@ -27,7 +27,10 @@ import java.util.function.DoubleUnaryOperator;
 <span class="fc" id="L27">        scalarMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Unit.NAUTICAL_MILE, Unit.KILOMETRE), 1.852);</span>
 <span class="fc" id="L28">        scalarMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Unit.KILOMETRE, Unit.METRE), 1000.0);</span>
 <span class="fc" id="L29">        scalarMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Unit.KILOMETRE, Unit.CENTIMETRE), 100000.0);</span>
-<span class="fc" id="L30">    }</span>
+        
+        // Placeholder. This is a bad example of using functions to optimise. REplace in the future with something like KNOT -&gt; METRE_PER_SECOND (knots) - &gt; (knots / 3.6) * 1.852
+<span class="pc" id="L32">        functionMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Unit.NAUTICAL_MILE, Unit.KILOMETRE), (nmi_i) -&gt; nmi_i * 1.852);</span>
+<span class="fc" id="L33">    }</span>
 
     /**
      * &lt;p&gt;Adds a scalar function for transitioning from the unitIn, to the 
@@ -40,10 +43,10 @@ import java.util.function.DoubleUnaryOperator;
      * @return the result of Map.put(...)
      */
     public static Double putScalar(final Unit unitIn, final Unit unitOut, final double scalar) {
-<span class="nc bnc" id="L43" title="All 2 branches missed.">        if(scalar == 0.0) {</span>
-<span class="nc" id="L44">            throw new ArithmeticException(&quot;scalar values of 0 are not accepted in the UnitConverter.&quot;);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if(scalar == 0.0) {</span>
+<span class="nc" id="L47">            throw new ArithmeticException(&quot;scalar values of 0 are not accepted in the UnitConverter.&quot;);</span>
         }
-<span class="nc" id="L46">        return scalarMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), scalar);</span>
+<span class="nc" id="L49">        return scalarMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), scalar);</span>
     }
 
     /**
@@ -57,7 +60,7 @@ import java.util.function.DoubleUnaryOperator;
      * @return the response to Map.put(...)
      */
     public static DoubleUnaryOperator putFunction(final Unit unitIn, final Unit unitOut, final DoubleUnaryOperator function) {
-<span class="nc" id="L60">        return functionMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), Objects.requireNonNull(function));</span>
+<span class="nc" id="L63">        return functionMap.put(new AbstractMap.SimpleImmutableEntry&lt;&gt;(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), Objects.requireNonNull(function));</span>
     }
 
     /**
@@ -69,9 +72,9 @@ import java.util.function.DoubleUnaryOperator;
      * @return a measure containing the in parameter represented in the unitOut.
      */
     public static Measure convert(final Measure in, final Unit unitOut) {
-<span class="nc" id="L72">        Objects.requireNonNull(in);</span>
+<span class="fc" id="L75">        Objects.requireNonNull(in);</span>
 
-<span class="nc" id="L74">        return convert(in.getQuantity(), in.getUnit(), unitOut);</span>
+<span class="fc" id="L77">        return convert(in.getQuantity(), in.getUnit(), unitOut);</span>
     }
 
     /**
@@ -90,41 +93,42 @@ import java.util.function.DoubleUnaryOperator;
      * @param unitOut the desired Unit which should be present in the returned
      * measure
      * @return a measure containing the in parameter represented in the unitOut.
+     * @throws UnsupportedOperationException if conversion is not supported
      */
     public static Measure convert(final double in, final Unit unitIn, final Unit unitOut) {
-<span class="fc" id="L95">        Objects.requireNonNull(unitIn);</span>
-<span class="fc" id="L96">        Objects.requireNonNull(unitOut);</span>
+<span class="fc" id="L99">        Objects.requireNonNull(unitIn);</span>
+<span class="fc" id="L100">        Objects.requireNonNull(unitOut);</span>
 
         // Same Unit case
-<span class="fc bfc" id="L99" title="All 2 branches covered.">        if(unitIn == unitOut) {</span>
-<span class="fc" id="L100">            return new Measure(in, unitOut);</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if(unitIn == unitOut) {</span>
+<span class="fc" id="L104">            return new Measure(in, unitOut);</span>
         }
 
         // Function case
-<span class="fc" id="L104">        final DoubleUnaryOperator conversionFunction = functionMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitIn, unitOut), null);</span>
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if(conversionFunction != null) {</span>
-<span class="nc" id="L106">            return new Measure(conversionFunction.applyAsDouble(in), unitOut);</span>
+<span class="fc" id="L108">        final DoubleUnaryOperator conversionFunction = functionMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitIn, unitOut), null);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if(conversionFunction != null) {</span>
+<span class="nc" id="L110">            return new Measure(conversionFunction.applyAsDouble(in), unitOut);</span>
         }
 
         // Scalar case
-<span class="fc" id="L110">        Double variable = scalarMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitIn, unitOut), null);</span>
-<span class="fc bfc" id="L111" title="All 2 branches covered.">        if(variable != null) {</span>
-<span class="fc" id="L112">            return new Measure(in * variable, unitOut);</span>
+<span class="fc" id="L114">        Double variable = scalarMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitIn, unitOut), null);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        if(variable != null) {</span>
+<span class="fc" id="L116">            return new Measure(in * variable, unitOut);</span>
         }
 
         // Divisor case
-<span class="fc" id="L116">        variable = scalarMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitOut, unitIn), null);</span>
-<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if(variable != null) {</span>
-<span class="fc" id="L118">            return new Measure(in / variable, unitOut);</span>
+<span class="fc" id="L120">        variable = scalarMap.getOrDefault(new AbstractMap.SimpleImmutableEntry&lt;&gt;(unitOut, unitIn), null);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        if(variable != null) {</span>
+<span class="fc" id="L122">            return new Measure(in / variable, unitOut);</span>
         }
 
         // Convert to shared base unit
-<span class="nc bnc" id="L122" title="All 2 branches missed.">        if(unitIn.getBaseUnit() == unitOut.getBaseUnit()) {</span>
-<span class="nc" id="L123">            final Measure inInBaseUnit = unitIn.convertToBaseUnit(in);</span>
-<span class="nc" id="L124">            return unitOut.convertFromBaseUnit(inInBaseUnit.getQuantity());</span>
+<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        if(unitIn.getBaseUnit() == unitOut.getBaseUnit()) {</span>
+<span class="nc" id="L127">            final Measure inInBaseUnit = unitIn.convertToBaseUnit(in);</span>
+<span class="nc" id="L128">            return unitOut.convertFromBaseUnit(inInBaseUnit.getQuantity());</span>
         }
 
-<span class="nc" id="L127">        throw new UnsupportedOperationException(&quot;Conversion from &quot; + unitIn.toString() + &quot; to &quot; + unitOut.toString() + &quot; is not supported.&quot;);</span>
+<span class="fc" id="L131">        throw new UnsupportedOperationException(&quot;Conversion from &quot; + unitIn.toString() + &quot; to &quot; + unitOut.toString() + &quot; is not supported.&quot;);</span>
     }
 
 }
