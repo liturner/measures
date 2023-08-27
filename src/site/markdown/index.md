@@ -38,3 +38,23 @@ Measure myMillimetres = new Measure(MILLIMETRE, 1337);
 Measure myCentimetres = myMillimetres.convertTo(Unit.CENTIMETRE);
 myCentimetres.getQuantity(); // 133.7
 ```
+
+Create an optimised conversion between units to prevent issues with java double
+limitations:
+
+```java
+Measure lotsOfKilometers = new Measure(Unit.KILOMETER, Double.MAX_VALUE);
+lotsOfKilometers.convertTo(Unit.NAUTICAL_MILE); // Throws an exception.
+
+// By default, Unit Conversions go to the base unit. This is a problem in our
+// case, as lotsOfKilometers.convertTo(Unit.METRE) will return 
+// Double.POSITIVE_INFINITY. To resolve this, we can add a specialised 
+// conversion which goes directly to the desired unit.
+
+UnitConverter.putScalar(Unit.NAUTICAL_MILE, Unit.KILOMETRE, 1.852);
+lotsOfKilometers.convertTo(Unit.NAUTICAL_MILE); // Succeeds
+
+// There is also a putFunction feature for more complicated conversions. For
+// example if you need a conversion with maximum accuracy, then you could
+// write functions which utilise BigDecimal.
+```

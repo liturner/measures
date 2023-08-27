@@ -37,6 +37,16 @@ public class Unit {
         this.toBaseUnitFunction = Objects.requireNonNull(toBaseUnitFunction);
         this.fromBaseUnitFunction = Objects.requireNonNull(fromBaseUnitFunction);
     }
+    
+    /**
+     * Helper function for creating measures with a Unit.
+     * 
+     * @param quantity the quantity of this unit which should be in the Measure.
+     * @return a new Measure instance.
+     */
+    public Measure createMeasure(final double quantity) {
+        return new Measure(quantity, this);
+    }
 
     /**
      * Gets the common base unit for the family of units to which this Unit belongs. For example,

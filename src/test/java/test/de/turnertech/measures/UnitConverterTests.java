@@ -24,5 +24,10 @@ public class UnitConverterTests {
         assertEquals(Double.POSITIVE_INFINITY, Unit.NAUTICAL_MILE.convertToBaseUnit(Double.MAX_VALUE).getQuantity());
         assertTrue(UnitConverter.convert(Double.MAX_VALUE, Unit.KILOMETRE, Unit.NAUTICAL_MILE).getQuantity() < Double.MAX_VALUE);
     }
+    
+    @Test
+    void miscTests() {
+        assertEquals(Unit.METRE, Unit.NAUTICAL_MILE.getBaseUnit());
+    }
 
 }

@@ -1,5 +1,6 @@
 package test.de.turnertech.measures;
 
+import de.turnertech.measures.Measure;
 import de.turnertech.measures.Unit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -48,6 +49,24 @@ public class UnitTests {
         assertSame(Unit.KELVIN, Unit.DEGREES_CELSIUS.getBaseUnit());
         assertEquals(1.0, Unit.DEGREES_CELSIUS.convertFromBaseUnit(274.15).getQuantity());
         assertEquals(274.15, Unit.DEGREES_CELSIUS.convertToBaseUnit(1.0).getQuantity());
+    }
+    
+    @Test
+    void createMeasureTests() {
+        assertSame(Unit.METRE, Unit.METRE.createMeasure(5).getUnit());
+    }
+    
+    @Test
+    void convertToTests() {
+        assertEquals(1.0, Unit.METRE.createMeasure(1000).convertTo(Unit.KILOMETRE).getQuantity());
+    }
+    
+    @Test
+    void assignmentTests() {
+        Measure myMeasure = Unit.METRE.createMeasure(1000);
+        assertEquals(1000.0, myMeasure.getQuantity());
+        myMeasure.setQuantity(1.0);
+        assertEquals(1.0, myMeasure.getQuantity());
     }
 
 }

@@ -16,7 +16,7 @@ public class Measure {
     private double quantity;
 
     private final Unit unit;
-
+    
     /**
      * Constructs an instance with the provided parameters.
      * @param quantity The quantity of Units in this Measure. Mutable.
@@ -83,6 +83,32 @@ public class Measure {
      */
     public Measure convertTo(final Unit newUnit) {
         return UnitConverter.convert(this, newUnit);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 61 * hash + (int) (Double.doubleToLongBits(this.quantity) ^ (Double.doubleToLongBits(this.quantity) >>> 32));
+        hash = 61 * hash + Objects.hashCode(this.unit);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Measure other = (Measure) obj;
+        if (Double.doubleToLongBits(this.quantity) != Double.doubleToLongBits(other.quantity)) {
+            return false;
+        }
+        return Objects.equals(this.unit, other.unit);
     }
 
 }
