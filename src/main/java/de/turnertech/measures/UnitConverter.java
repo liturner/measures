@@ -18,8 +18,8 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class UnitConverter {
     
-    private static final HashMap<AbstractMap.SimpleImmutableEntry<Object, Object>, Double> scalarMap = new HashMap<>();
-    private static final HashMap<AbstractMap.SimpleImmutableEntry<Object, Object>, DoubleUnaryOperator> functionMap = new HashMap<>();
+    private static final HashMap<AbstractMap.SimpleImmutableEntry<Unit, Unit>, Double> scalarMap = new HashMap<>();
+    private static final HashMap<AbstractMap.SimpleImmutableEntry<Unit, Unit>, DoubleUnaryOperator> functionMap = new HashMap<>();
 
     static {
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.NAUTICAL_MILE, Unit.CENTIMETRE), 185200.0);
@@ -29,23 +29,68 @@ public class UnitConverter {
         scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Unit.KILOMETRE, Unit.CENTIMETRE), 100000.0);
     }
 
-    public static Double putScalar(final Object unitIn, final Object unitOut, final double scalar) {
+    /**
+     * <p>Adds a scalar function for transitioning from the unitIn, to the 
+     * unitOut. This scalar will also be used as a divisor in the reverse 
+     * direction.</p>
+     * 
+     * @param unitIn the Unit in which the in parameter is represented.
+     * @param unitOut the desired Unit which should be present in the returned.
+     * @param scalar the scalar.
+     * @return the result of Map.put(...)
+     */
+    public static Double putScalar(final Unit unitIn, final Unit unitOut, final double scalar) {
         if(scalar == 0.0) {
             throw new ArithmeticException("scalar values of 0 are not accepted in the UnitConverter.");
         }
         return scalarMap.put(new AbstractMap.SimpleImmutableEntry<>(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), scalar);
     }
 
-    public static DoubleUnaryOperator putFunction(final Object unitIn, final Object unitOut, final DoubleUnaryOperator function) {
+    /**
+     * <p>Adds a conversion function for transitioning from the unitIn, to the
+     * unitOut. This should be the highest accuracy possible and will be 
+     * prioritised over other conversion methods.</p>
+     * 
+     * @param unitIn the Unit in which the in parameter is represented.
+     * @param unitOut the desired Unit which should be present in the returned.
+     * @param function the conversion function.
+     * @return the response to Map.put(...)
+     */
+    public static DoubleUnaryOperator putFunction(final Unit unitIn, final Unit unitOut, final DoubleUnaryOperator function) {
         return functionMap.put(new AbstractMap.SimpleImmutableEntry<>(Objects.requireNonNull(unitIn), Objects.requireNonNull(unitOut)), Objects.requireNonNull(function));
     }
 
+    /**
+     * <p>Converts between Units using one of a number of conversion options. 
+     * The conversion method used is prioritised to enable accuracy.</p>
+     * 
+     * @param in Measure to convert.
+     * @param unitOut Desired output Unit
+     * @return a measure containing the in parameter represented in the unitOut.
+     */
     public static Measure convert(final Measure in, final Unit unitOut) {
         Objects.requireNonNull(in);
 
         return convert(in.getQuantity(), in.getUnit(), unitOut);
     }
 
+    /**
+     * <p>Converts between Units using one of a number of conversion options. 
+     * The conversion method used is prioritised to enable accuracy.</p>
+     * 
+     * <ol>
+     * <li>Conversion Function stored in this class</li>
+     * <li>Conversion Scalar stored in this class</li>
+     * <li>Conversion Divisor using the Scalar stored in this class</li>
+     * <li>Conversion to/from the base Units stored in the Unit class</li>
+     * </ol>
+     * 
+     * @param in value to convert between Units.
+     * @param unitIn the Unit in which the in parameter is represented.
+     * @param unitOut the desired Unit which should be present in the returned
+     * measure
+     * @return a measure containing the in parameter represented in the unitOut.
+     */
     public static Measure convert(final double in, final Unit unitIn, final Unit unitOut) {
         Objects.requireNonNull(unitIn);
         Objects.requireNonNull(unitOut);
@@ -75,8 +120,8 @@ public class UnitConverter {
 
         // Convert to shared base unit
         if(unitIn.getBaseUnit() == unitOut.getBaseUnit()) {
-            final double inInBaseUnit = unitIn.convertToBaseUnit(in);
-            return new Measure(unitOut.convertFromBaseUnit(inInBaseUnit), unitOut);
+            final Measure inInBaseUnit = unitIn.convertToBaseUnit(in);
+            return unitOut.convertFromBaseUnit(inInBaseUnit.getQuantity());
         }
 
         throw new UnsupportedOperationException("Conversion from " + unitIn.toString() + " to " + unitOut.toString() + " is not supported.");

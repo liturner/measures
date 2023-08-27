@@ -8,11 +8,22 @@ import java.util.function.DoubleUnaryOperator;
  */
 public class Unit {
     
+    /** K */
     public static final Unit KELVIN = new Unit(null, (kelvin) -> kelvin, (kelvin) -> kelvin);
+    
+    /** °C */
     public static final Unit DEGREES_CELSIUS = new Unit(KELVIN, (celsius) -> celsius + 273.15, (kelvin) -> kelvin - 273.15);
+    
+    /** m */
     public static final Unit METRE = new Unit(null, (metre) -> metre, (kelvin) -> kelvin);
+    
+    /** cm */
     public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -> centimetre * 0.01, (metre) -> metre * 100.0);
+    
+    /** km */
     public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -> kilometer * 1000.0, (metre) -> metre * 0.001);
+    
+    /** nmi_i */
     public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -> nmi_i * 1852.0, (metre) -> metre / 1852.0);
 
     private final Unit baseUnit;
@@ -39,18 +50,26 @@ public class Unit {
     }
 
     /**
-     * Converts the supplied quantity of this Unit to its base unit. For example supplying a quantity
-     * of 1 to this function on an instance of {@link Unit#KILOMETRE} will return 1000 (metres).
+     * Converts a supplied quantity of this Unit to a quantity of its base unit.
+     * For example supplying a quantity of 1 to this function on an instance of 
+     * {@link Unit#KILOMETRE} will return 1000 (metres).
      * 
      * @param quantity of this Unit to convert to the base unit.
      * @return the quantity of the Base Unit which the supplied quantity represents.
      */
-    public double convertToBaseUnit(final double quantity) {
-        return toBaseUnitFunction.applyAsDouble(quantity);
+    public Measure convertToBaseUnit(final double quantity) {
+        return new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);
     }
 
-    public double convertFromBaseUnit(double quantity) {
-        return fromBaseUnitFunction.applyAsDouble(quantity);
+    /**
+     * Converts a supplied quantity of this Units base unit to a quantity of 
+     * itself.
+     * 
+     * @param quantity of this Unit base unit to convert to this unit.
+     * @return a measure with this Unit.
+     */
+    public Measure convertFromBaseUnit(final double quantity) {
+        return new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);
     }
 
 }

@@ -18,7 +18,7 @@ public class UnitConverterTests {
 
     @Test
     void nauticalMileOverflow() {
-        assertEquals(Double.POSITIVE_INFINITY, Unit.NAUTICAL_MILE.convertToBaseUnit(Double.MAX_VALUE));
+        assertEquals(Double.POSITIVE_INFINITY, Unit.NAUTICAL_MILE.convertToBaseUnit(Double.MAX_VALUE).getQuantity());
         assertTrue(UnitConverter.convert(Double.MAX_VALUE, Unit.KILOMETRE, Unit.NAUTICAL_MILE).getQuantity() < Double.MAX_VALUE);
     }
 
