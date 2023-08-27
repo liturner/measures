@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"de.turnertech.measures","l":"Measure"},{"p":"de.turnertech.measures","l":"Unit"},{"p":"de.turnertech.measures","l":"UnitConverter"}];updateSearchResults();

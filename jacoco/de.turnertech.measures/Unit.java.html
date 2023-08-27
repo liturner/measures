@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Unit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Measures</a> &gt; <a href="index.source.html" class="el_package">de.turnertech.measures</a> &gt; <span class="el_source">Unit.java</span></div><h1>Unit.java</h1><pre class="source lang-java linenums">package de.turnertech.measures;
+
+import java.util.Objects;
+import java.util.function.DoubleUnaryOperator;
+
+/**
+ * A Unit is a single instance of a Measurement, such as a Metre or a Degree Celsius.
+ */
+public class Unit {
+    
+    /** K */
+<span class="fc" id="L12">    public static final Unit KELVIN = new Unit(null, (kelvin) -&gt; kelvin, (kelvin) -&gt; kelvin);</span>
+    
+    /** °C */
+<span class="fc" id="L15">    public static final Unit DEGREES_CELSIUS = new Unit(KELVIN, (celsius) -&gt; celsius + 273.15, (kelvin) -&gt; kelvin - 273.15);</span>
+    
+    /** m */
+<span class="fc" id="L18">    public static final Unit METRE = new Unit(null, (metre) -&gt; metre, (kelvin) -&gt; kelvin);</span>
+    
+    /** cm */
+<span class="fc" id="L21">    public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -&gt; centimetre * 0.01, (metre) -&gt; metre * 100.0);</span>
+    
+    /** km */
+<span class="fc" id="L24">    public static final Unit KILOMETRE = new Unit(METRE, (kilometer) -&gt; kilometer * 1000.0, (metre) -&gt; metre * 0.001);</span>
+    
+    /** nmi_i */
+<span class="fc" id="L27">    public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -&gt; nmi_i * 1852.0, (metre) -&gt; metre / 1852.0);</span>
+
+    private final Unit baseUnit;
+
+    private final DoubleUnaryOperator toBaseUnitFunction;
+
+    private final DoubleUnaryOperator fromBaseUnitFunction;
+
+<span class="fc" id="L35">    private Unit(final Unit baseUnit, final DoubleUnaryOperator toBaseUnitFunction, final DoubleUnaryOperator fromBaseUnitFunction) {</span>
+<span class="fc" id="L36">        this.baseUnit = Objects.requireNonNullElse(baseUnit, this);</span>
+<span class="fc" id="L37">        this.toBaseUnitFunction = Objects.requireNonNull(toBaseUnitFunction);</span>
+<span class="fc" id="L38">        this.fromBaseUnitFunction = Objects.requireNonNull(fromBaseUnitFunction);</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Gets the common base unit for the family of units to which this Unit belongs. For example,
+     * Metres are the base Unit for all distance Units. Even Feet, Inches and Nautical Miles will
+     * share the same base unit of a Metre.
+     * 
+     * @return the base unit for this Unit.
+     */
+    public Unit getBaseUnit() {
+<span class="fc" id="L49">        return baseUnit;</span>
+    }
+
+    /**
+     * Converts a supplied quantity of this Unit to a quantity of its base unit.
+     * For example supplying a quantity of 1 to this function on an instance of 
+     * {@link Unit#KILOMETRE} will return 1000 (metres).
+     * 
+     * @param quantity of this Unit to convert to the base unit.
+     * @return the quantity of the Base Unit which the supplied quantity represents.
+     */
+    public Measure convertToBaseUnit(final double quantity) {
+<span class="fc" id="L61">        return new Measure(toBaseUnitFunction.applyAsDouble(quantity), this.baseUnit);</span>
+    }
+
+    /**
+     * Converts a supplied quantity of this Units base unit to a quantity of 
+     * itself.
+     * 
+     * @param quantity of this Unit base unit to convert to this unit.
+     * @return a measure with this Unit.
+     */
+    public Measure convertFromBaseUnit(final double quantity) {
+<span class="fc" id="L72">        return new Measure(fromBaseUnitFunction.applyAsDouble(quantity), this);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
