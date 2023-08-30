@@ -9,16 +9,16 @@ import java.util.function.DoubleUnaryOperator;
 public class Unit {
     
     /** K */
-    public static final Unit KELVIN = new Unit(null, (kelvin) -> kelvin, (kelvin) -> kelvin);
+    public static final Unit KELVIN = new Unit();
     
-    /** °C */
+    /** Cel */
     public static final Unit DEGREES_CELSIUS = new Unit(KELVIN, (celsius) -> celsius + 273.15, (kelvin) -> kelvin - 273.15);
     
-    /** °F */
+    /** degF */
     public static final Unit DEGREES_FAHRENHEIT = new Unit(KELVIN, (fahrenheit) -> (fahrenheit - 32) * 5.0/9.0 + 273.15, (kelvin) -> (kelvin - 273.15) * 9/5 + 32);
     
     /** m */
-    public static final Unit METRE = new Unit(null, (metre) -> metre, (kelvin) -> kelvin);
+    public static final Unit METRE = new Unit();
     
     /** cm */
     public static final Unit CENTIMETRE = new Unit(METRE, (centimetre) -> centimetre * 0.01, (metre) -> metre * 100.0);
@@ -42,16 +42,16 @@ public class Unit {
     public static final Unit NAUTICAL_MILE = new Unit(METRE, (nmi_i) -> nmi_i * 1852.0, (metre) -> metre / 1852.0);
     
     /** s */
-    public static final Unit SECOND = new Unit(null, (second) -> second, (second) -> second);
+    public static final Unit SECOND = new Unit();
     
     /** g */
-    public static final Unit GRAM = new Unit(null, (gram) -> gram, (gram) -> gram);
+    public static final Unit GRAM = new Unit();
     
     /** lb_av */
     public static final Unit POUND = new Unit(Unit.GRAM, (gram) -> gram * 453.59237, (pound) -> pound / 453.59237);
     
     /** rad */
-    public static final Unit RADIAN = new Unit(null, (rad) -> rad, (rad) -> rad);
+    public static final Unit RADIAN = new Unit();
     
     /** deg */
     public static final Unit DEGREE = new Unit(Unit.RADIAN, (deg) -> deg * Math.PI / 180.0, (rad) -> rad * 180 / Math.PI);
@@ -62,7 +62,25 @@ public class Unit {
 
     private final DoubleUnaryOperator fromBaseUnitFunction;
 
-    private Unit(final Unit baseUnit, final DoubleUnaryOperator toBaseUnitFunction, final DoubleUnaryOperator fromBaseUnitFunction) {
+    /**
+     * Constructs a "Base Unit", where its own base unit is iteself, and 
+     * conversions to and from its base unit will alway return the same value
+     * as input ({@link DoubleUnaryOperator#identity()}).
+     */
+    public Unit() {
+        this(null, DoubleUnaryOperator.identity(), DoubleUnaryOperator.identity());
+    }
+    
+    /**
+     * Constructs a Unit with the supplied base unit and conversion functions
+     * too and from said Unit.
+     * 
+     * @param baseUnit the unit to which the conversion functions will convert. 
+     * Supplying null will make the base unit the unit itself (this).
+     * @param toBaseUnitFunction may not be null.
+     * @param fromBaseUnitFunction may not be null.
+     */
+    public Unit(final Unit baseUnit, final DoubleUnaryOperator toBaseUnitFunction, final DoubleUnaryOperator fromBaseUnitFunction) {
         this.baseUnit = Objects.requireNonNullElse(baseUnit, this);
         this.toBaseUnitFunction = Objects.requireNonNull(toBaseUnitFunction);
         this.fromBaseUnitFunction = Objects.requireNonNull(fromBaseUnitFunction);
