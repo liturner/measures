@@ -110,5 +110,19 @@ public class Measure {
         }
         return Objects.equals(this.unit, other.unit);
     }
+    
+    /**
+     * We use the SI standard for the String representation. There is always a
+     * space between the quantity and unit, unless it is a planar angle.
+     * @return the Measure as a string formatted as per the SI Brochure section 
+     * 5.3.3
+     */
+    @Override
+    public String toString() {
+        if(unit == Unit.DEGREE || unit == Unit.MINUTE_ANGLE || unit == Unit.SECOND_ANGLE) {
+            return String.format("%f%s", quantity, unit.toString());
+        }
+        return String.format("%f %s", quantity, unit.toString());
+    }
 
 }

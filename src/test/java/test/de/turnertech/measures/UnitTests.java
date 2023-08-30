@@ -18,6 +18,13 @@ public class UnitTests {
     }
 
     @Test
+    void angleTests() {
+        assertSame(Unit.DEGREE, Unit.MINUTE_ANGLE.getBaseUnit());
+        assertEquals(60.0, Unit.MINUTE_ANGLE.convertFromBaseUnit(1.0).getQuantity());
+        assertEquals(1.0, Unit.MINUTE_ANGLE.convertToBaseUnit(60.0).getQuantity());
+    }
+    
+    @Test
     void metreTests() {
         assertSame(Unit.METRE, Unit.METRE.getBaseUnit());
         assertEquals(1.0, Unit.METRE.convertFromBaseUnit(1.0).getQuantity());
