@@ -7,7 +7,7 @@
   <name>Measures</name>
   <inceptionYear>2023</inceptionYear>
   <url>https://liturner.github.io/measures/</url>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>jar</packaging>
 
   <description>Basic and extendable Units, Measures and Converters.</description>
@@ -21,7 +21,7 @@
     <connection>scm:git:https://github.com/liturner/measures.git</connection>
     <developerConnection>scm:git:https://github.com/liturner/measures.git</developerConnection>
     <url>https://github.com/liturner/measures</url>
-    <tag>HEAD</tag>
+    <tag>measures-1.1</tag>
   </scm>
 
   <issueManagement>
