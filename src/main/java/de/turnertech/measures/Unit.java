@@ -49,12 +49,19 @@ public class Unit {
     
     /** lb_av */
     public static final Unit POUND = new Unit("lb", Unit.GRAM, (gram) -> gram * 453.59237, (pound) -> pound / 453.59237);
+        
+    /** deg */
+    public static final Unit DEGREE = new Unit("°");
+    
+    /** ' */
+    public static final Unit MINUTE_ANGLE = new Unit("'", Unit.DEGREE, (min) -> min / 60.0, (deg) -> deg * 60.0);
+    
+    /** " */
+    public static final Unit SECOND_ANGLE = new Unit("\"", Unit.DEGREE, (sec) -> sec / 3600.0, (deg) -> deg / 3600.0);
     
     /** rad */
-    public static final Unit RADIAN = new Unit("rad");
+    public static final Unit RADIAN = new Unit("rad", Unit.DEGREE, (rad) -> rad * 180.0 / Math.PI, (deg) -> deg * Math.PI / 180.0);
     
-    /** deg */
-    public static final Unit DEGREE = new Unit("°", Unit.RADIAN, (deg) -> deg * Math.PI / 180.0, (rad) -> rad * 180 / Math.PI);
 
     private final Unit baseUnit;
 

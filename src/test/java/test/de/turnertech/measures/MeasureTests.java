@@ -26,5 +26,5 @@ public class MeasureTests {
     void equality() {
         assertEquals(Unit.KILOMETRE.createMeasure(1.0), Unit.METRE.createMeasure(1000.0).convertTo(Unit.KILOMETRE));
     }
-
+    
 }
