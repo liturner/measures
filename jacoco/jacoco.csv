@@ -1,4 +1,4 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Measures,de.turnertech.measures,UnitConverter,64,161,4,8,8,25,7,6,4,3
-Measures,de.turnertech.measures,Unit,89,245,7,9,1,30,27,19,20,18
-Measures,de.turnertech.measures,Measure,35,76,4,6,8,18,5,8,1,7
+Measures,de.turnertech.measures,Unit,89,277,7,9,3,36,24,19,17,18
+Measures,de.turnertech.measures,Measure,81,76,10,6,11,18,9,8,2,7

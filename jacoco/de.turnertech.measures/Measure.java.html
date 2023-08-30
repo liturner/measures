@@ -110,6 +110,20 @@ public class Measure {
         }
 <span class="fc" id="L111">        return Objects.equals(this.unit, other.unit);</span>
     }
+    
+    /**
+     * We use the SI standard for the String representation. There is always a
+     * space between the quantity and unit, unless it is a planar angle.
+     * @return the Measure as a string formatted as per the SI Brochure section 
+     * 5.3.3
+     */
+    @Override
+    public String toString() {
+<span class="nc bnc" id="L122" title="All 6 branches missed.">        if(unit == Unit.DEGREE || unit == Unit.MINUTE_ANGLE || unit == Unit.SECOND_ANGLE) {</span>
+<span class="nc" id="L123">            return String.format(&quot;%f%s&quot;, quantity, unit.toString());</span>
+        }
+<span class="nc" id="L125">        return String.format(&quot;%f %s&quot;, quantity, unit.toString());</span>
+    }
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
