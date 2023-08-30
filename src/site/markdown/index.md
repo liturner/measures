@@ -38,7 +38,7 @@ myCentimetres.getQuantity(); // 185.0
 ```java
 // A Unit is defined with a "Base Unit" and conversion functions too and from 
 // your Unit definition and the base unit.
-Unit MILLIMETRE = new Unit(Unit.METRE, (millimetre) -> millimetre * 0.001, (metre) -> metre * 1000.0);
+Unit MILLIMETRE = new Unit("mm", Unit.METRE, (millimetre) -> millimetre * 0.001, (metre) -> metre * 1000.0);
 Measure myMillimetres = new Measure(MILLIMETRE, 1337);
 
 // This conversion is possible as the custom unit shares the same base unit.
