@@ -17,4 +17,4 @@ jobs:
         cache: maven
 
     - name: Maven verify
-      run: mvn --batch-mode --no-transfer-progress --update-snapshots verify site
+      run: mvn --batch-mode --no-transfer-progress --update-snapshots verify site -Dgpg.skip
